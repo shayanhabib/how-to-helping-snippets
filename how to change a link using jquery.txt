@@ -1,0 +1,1 @@
+$("#quicktabs-tab-galeri-1").attr("href", new_href);

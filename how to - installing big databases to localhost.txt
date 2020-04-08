@@ -1,0 +1,8 @@
+(for installing big databases to localhost)
+
+1. Put the database sql file in MYSQL directory of XAMPP 
+2. Play below command in CMD:
+mysql -u username -p database_name < db.sql
+
+username (your databse name)
+database_name (your new database in which you want to import db.sql file)

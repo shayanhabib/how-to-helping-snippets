@@ -1,0 +1,7 @@
+<!DOCTYPE html  itemscope="itemscope" itemtype="http://schema.org/WebPage">
+
+
+
+answer : http://stackoverflow.com/questions/3659778/can-i-add-microdata-from-html5-to-a-xhtml-strict-site-and-still-be-compliant
+(why w3c validator still giving an error for itemscope name not reserved)
+

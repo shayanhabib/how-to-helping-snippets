@@ -1,0 +1,47 @@
+<?php 
+//add role and capabilities to manage just orders for "Sales Manager"
+$result = add_role(
+    'sales_manager',
+    __( 'Sales Manager' ),
+    array(
+        'read'         => true,
+        'edit_posts' => true,
+        'edit_shop_orders'   => true,
+        'manage_woocommerce_orders' => true,
+        'read_shop_order' => true,
+        'edit_others_shop_orders' => true
+    )
+);
+if ( null !== $result ) {
+    echo 'Yay! New role created!';
+}
+else {
+    echo 'Oh... the basic_contributor role already exists.';
+}
+
+
+//remove extra pages for admin
+function wpse28782_remove_menu_items() {
+    if( current_user_can( 'sales_manager' ) ):
+        remove_menu_page( 'edit.php' );
+    	remove_menu_page( 'post-new.php' );
+    	remove_menu_page( 'edit-comments.php' );
+    	remove_menu_page( 'tools.php' );
+    	remove_menu_page( 'wpcf7' );
+    endif;
+}
+add_action( 'admin_menu', 'wpse28782_remove_menu_items' );
+
+
+//remove dashboard widgets
+function example_remove_dashboard_widget() {
+	if( current_user_can( 'sales_manager' ) ):
+ 		remove_meta_box( 'dashboard_right_now', 'dashboard', 'normal' );
+	 	remove_meta_box( 'dashboard_activity', 'dashboard', 'normal' );
+	 	remove_meta_box( 'dashboard_primary', 'dashboard', 'side' );
+	 	remove_meta_box( 'dashboard_quick_press', 'dashboard', 'side' );
+ 	endif;
+} 
+ 
+add_action('wp_dashboard_setup', 'example_remove_dashboard_widget' );
+?>

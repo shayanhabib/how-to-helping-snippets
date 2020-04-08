@@ -1,0 +1,6 @@
+ALTER TABLE pulse 
+ADD CONSTRAINT fk_client_id 
+FOREIGN KEY (client_id) 
+REFERENCES clients(cid)
+ON UPDATE CASCADE
+ON DELETE CASCADE

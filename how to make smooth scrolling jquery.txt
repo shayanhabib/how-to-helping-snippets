@@ -1,0 +1,6 @@
+jQuery(document).ready(function(){
+			jQuery("#post-about .more-link").attr("href", "#icandi");
+			jQuery("#post-about .more-link").click(function () {
+				jQuery('html,body').animate({scrollTop: jQuery("#icandi").offset().top},'slow');
+                	}); 
+		});

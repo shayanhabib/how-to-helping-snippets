@@ -1,0 +1,4 @@
+How to create more than 50 product variations in WooCommerce?
+
+define( 'WC_MAX_LINKED_VARIATIONS', 100 );
+add this line in wp-config.php

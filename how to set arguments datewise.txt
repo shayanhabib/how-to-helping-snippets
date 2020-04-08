@@ -1,0 +1,25 @@
+ 'year' => $today['year'], 'monthnum' => $today['mon'], 'day' => $today['mday'] 
+
+
+'date_query' => array( array( 'after' => $today['mon'] . $today['mday'] . $today['year'], 'inclusive' => true ) ),
+
+
+
+
+
+, 'year' => $year, 'm' => $month
+
+
+
+$today = getdate();
+					$month = date( 'M' );
+					$year = date( 'Y' );
+
+
+
+ 'post_status' => array( 'publish', 'future' ),
+
+
+
+
+ $args = array( 'post_type' => 'bands', 'numberposts' => 1, 'order' => 'asc', 'year' => $today['year'], 'monthnum' => $today['mon'], 'day' => $today['mday']  );

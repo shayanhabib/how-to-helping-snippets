@@ -1,0 +1,2 @@
+i removed $before from line 455, qtranslate-core.php for solving issue 
+Catchable fatal error: Object of class WP_Post could not be converted to string in /home/creajtjg/public_html/wp-content/plugins/qtranslate/qtranslate_core.php on line 455.

@@ -1,0 +1,6 @@
+how to change [...] to read more link in wordpress excerpt
+________
+
+<?php function gpp_excerpt($text) { return str_replace('[...]', '<br /><a href="'.get_permalink().'">Read More &rarr;</a>', $text); } add_filter('the_excerpt', 'gpp_excerpt'); ?>
+
+________

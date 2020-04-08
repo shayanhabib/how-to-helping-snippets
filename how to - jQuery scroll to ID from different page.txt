@@ -1,0 +1,30 @@
+//jQuery scroll to ID from different page
+
+<script>
+var jump=function(e){
+   if (e){
+       e.preventDefault();
+       var target = jQuery(this).attr("href");
+   } else {
+       var target = location.hash;
+   }
+
+   jQuery('html,body').animate({
+       scrollTop: jQuery(target).offset().top
+   }, 2000, function(){
+       location.hash = target;
+   });
+}
+
+jQuery(document).ready(function(){
+    jQuery('a[href^=#]').bind("click", jump);
+    if (location.hash){
+        setTimeout(function(){
+            jQuery('html, body').scrollTop(0).show();
+            jump();
+        }, 0);
+    }else{
+        jQuery('html, body').show();
+    }
+});
+</script>

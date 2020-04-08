@@ -1,0 +1,8 @@
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {  
+	.booking {
+		margin-right: 16px !important;
+	}
+}
+
+
+/**this is just to hit the ie10 and plus versions.. **/

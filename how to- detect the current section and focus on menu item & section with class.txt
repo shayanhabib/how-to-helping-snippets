@@ -1,0 +1,18 @@
+jQuery(document).scroll(function() {
+			var cutoff = jQuery(window).scrollTop();
+			var cutoffRange = cutoff + 100;
+		
+			// Find current section and highlight nav menu
+			var curSec = jQuery.find('.current');
+			var curID = jQuery(curSec).attr('id');
+			var curNav = jQuery.find('a[name='+curID+']');
+			jQuery(curNav).addClass('active');
+		
+			jQuery('.section').each(function(){
+				if(jQuery(this).offset().top + jQuery(this).height() > cutoff){
+					jQuery('.section').removeClass('current')
+					jQuery(this).addClass('current');
+					return false; // stops the iteration after the first one on screen
+				}
+			});
+		});

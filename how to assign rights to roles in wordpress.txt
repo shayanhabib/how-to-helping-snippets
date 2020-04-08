@@ -1,0 +1,66 @@
+Roles and Capabilities : http://codex.wordpress.org/Roles_and_Capabilities#Capabilities
+
+
+If you want to add role in Wordpress
+
+____________
+
+
+$result = add_role(
+    'user1',
+    __( 'user1' ),
+    array(
+        'read'         => true,  // true allows this capability
+        'edit_posts'   => true,
+        'delete_posts' => false, // Use false to explicitly deny
+    )
+);
+if ( null !== $result ) {
+    echo 'Yay! New role created!';
+}
+else {
+    echo 'Oh... the basic_contributor role already exists.';
+}
+
+____________
+
+
+If you want to remove role from wordpress
+
+
+____________
+
+remove_role( 'user1' );
+
+____________
+
+
+If you want to get role in wordpress 
+
+
+____________
+
+
+get_role( 'editor' );
+
+____________
+
+
+If you want to add capabilities (assign roles) 
+
+____________
+
+$role = get_role( 'editor' );
+  $role->add_cap( 'edit_posts' );
+
+____________
+
+
+If you want to remove capabilities (assign roles) 
+
+____________
+
+$role = get_role( 'editor' );
+  $role->remove_cap( 'edit_posts' );
+
+____________

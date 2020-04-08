@@ -1,0 +1,18 @@
+how to fix these errors: 
+--
+Your PHP setting max_input_vars is currently set to 3000. We recommand to set this value at least to 5000 to avoid any issue with our plugin.
+
+Your PHP setting post_max_size is currently set to 20M. We recommand to set this value at least to 128M to avoid any issue with our plugin.
+--
+
+max_input_vars = 5000 
+suhosin.get.max_vars = 5000 
+suhosin.post.max_vars = 5000 
+suhosin.request.max_vars = 5000 
+max_execution_time=300
+memory_limit = 128M ;Maximum amount of memory a script may consume (128MB by default
+post_max_size = 128M
+post_max_size = 128M
+max_input_vars = 5000
+max_execution_time = 360
+max_input_time = 120

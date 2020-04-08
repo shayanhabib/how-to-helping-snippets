@@ -1,0 +1,130 @@
+Send email notification when profile updates
+_____
+
+
+function user_profile_update( $user_id ) {
+        $site_url = get_bloginfo('wpurl');
+        $user_info = get_userdata( $user_id );
+        $to = $user_info->user_email; 
+        $subject = "Profile Updated: ".$site_url."";
+        $message = "Hello " .$user_info->display_name . "\nYour profile has been updated!\n\nThank you for visiting\n ".$site_url."";
+        wp_mail( $to, $subject, $message);
+}
+add_action( 'profile_update', 'user_profile_update', 10, 2);
+
+
+_______________
+
+List all the ‘Authors’, with WP_User_Query
+_____
+
+
+$args = array(
+        'role' => 'Author'
+);
+// The Query
+$user_query = new WP_User_Query( $args );
+
+// User Loop
+if ( ! empty( $user_query->results ) ) {
+        foreach ( $user_query->results as $user ) {
+                echo get_avatar($user->ID);
+
+                echo '<p><a href="'.home_url().'/author/'.$user->user_nicename.'">' . $user->display_name . '</a></p>';
+
+                $description = get_user_meta($user->ID, 'description', true);
+                echo "<p>Bio: $description</p>";
+        }
+} else {
+        echo 'No users found.';
+}
+
+_______________
+Track post views without a plugin using post meta
+____
+
+function getPostViews($postID){
+    $count_key = 'post_views_count';
+    $count = get_post_meta($postID, $count_key, true);
+    if($count==''){
+        delete_post_meta($postID, $count_key);
+        add_post_meta($postID, $count_key, '0');
+        return "0 View";
+    }
+    return $count.' Views';
+}
+function setPostViews($postID) {
+    $count_key = 'post_views_count';
+    $count = get_post_meta($postID, $count_key, true);
+    if($count==''){
+        $count = 0;
+        delete_post_meta($postID, $count_key);
+        add_post_meta($postID, $count_key, '0');
+    }else{
+        $count++;
+        update_post_meta($postID, $count_key, $count);
+    }
+}
+
+// Remove issues with prefetching adding extra views
+remove_action( 'wp_head', 'adjacent_posts_rel_link_wp_head', 10, 0); 
+
+Step 1.
+
+This part of the tracking views snippet will set the post views. Just place this snippet below within the single.php inside the wordpress loop.
+
+snippet :  PHP - single.phpcopy
+
+<?php
+          setPostViews(get_the_ID());
+?>
+
+Step 2.
+
+The snippet below is optional, so use this if you would like to display the number of views within your posts. Place this snippet within the loop.
+snippet :  PHP - single.php / index.phpcopy
+
+<?php 
+          echo getPostViews(get_the_ID());
+?>
+
+______________________
+How to add new items to admin bar
+____
+
+function wp_admin_bar_new_item() {
+global $wp_admin_bar;
+$wp_admin_bar->add_menu(array(
+'id' => 'wp-admin-bar-new-item',
+'title' => __('iShift Archive'),
+'href' => 'http://www.instantshift.com/archive/'
+));
+}
+add_action('wp_before_admin_bar_render', 'wp_admin_bar_new_item');
+
+______________________
+How to change WordPress admin and login page logo
+_____
+
+function my_custom_login_logo() {
+    echo '<style type="text/css">
+        h1 a { background-image:url('.get_bloginfo('template_url').'/images/login_page_logo.png) !important; }
+    </style>';
+}
+
+add_action('login_head', 'my_custom_login_logo');
+
+To change the WordPress Admin area logo (the one which located in the top left side of your Admin panel) then simply add following code to your theme’s functions.php file. Again, Don’t forget to change the logo location in line 3.
+
+
+function custom_logo() {
+  echo '<style type="text/css">
+    #header-logo { background-image: url('.get_bloginfo('template_directory').'/images/admin_page_logo.png) !important; }
+    </style>';
+}
+
+add_action('admin_head', 'custom_logo');
+
+
+______________________
+

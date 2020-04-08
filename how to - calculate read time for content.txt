@@ -1,0 +1,14 @@
+<?php 
+//how to - calculate read time for content
+
+function typology_read_time( $text ) {
+
+	$words = count( preg_split( "/[\n\r\t ]+/", wp_strip_all_tags( $text ) ) );
+
+	if ( !empty( $words ) ) {
+		$time_in_minutes = ceil( $words / 200 );
+		return $time_in_minutes;
+	}
+
+	return false;
+}

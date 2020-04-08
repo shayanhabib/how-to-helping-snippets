@@ -1,0 +1,9 @@
+<?php $excerpt = get_the_content();
+$excerpt = strip_shortcodes($excerpt);
+$excerpt = strip_tags($excerpt);
+$the_str = substr($excerpt, 0, 100);
+if( strlen($the_str) > 100 ) {
+	echo $the_str."...";
+} else {
+	echo $the_str;
+} ?>

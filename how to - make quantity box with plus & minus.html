@@ -1,0 +1,44 @@
+<div class="q">
+  <button class="dec button" id="btn[1]" onClick="javascript:jQuery(this).parent().find('input').val( function(i, oldval){ return parseInt( oldval, 10) - 1; } )" type="button">-</button>
+  <input type="text" name="keypad[1]" value="0" style="text-align: center;width:60px;">
+  <button class="inc button" id="btn[1]" onClick="javascript:jQuery(this).parent().find('input').val( function(i, oldval){ return parseInt( oldval, 10) + 1; } )" type="button">+</button>
+</div>
+
+
+--OR--
+
+
+<div class="q">
+    <input type="text" value="0" size="1" style="text-align: center;">
+</div>
+
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script>
+$(function() {
+    $("div.q").append('<button class="inc button">+</button>');
+    $("div.q").prepend('<button class="dec button">-</button>');
+
+    $(".button").on("click", function() {
+      var $button = $(this);
+      var oldValue = $button.parent().find("input").val();
+      if(oldValue == "") { var oldValue = "0"; }
+
+      if ($button.text() == "+") {
+          var newVal = parseFloat(oldValue) + 1;
+        } else {
+       // Don't allow decrementing below zero
+        if (oldValue > 0) {
+          var newVal = parseFloat(oldValue) - 1;
+        } else {
+          newVal = 0;
+        }
+      }
+
+      $button.parent().find("input").val(newVal);
+    });
+
+});
+
+
+
+</script>

@@ -1,0 +1,1 @@
+UPDATE wp5o_options SET option_value = replace(option_value, 'https://latucauderie.demolecourtier.fr','http://latucauderie.demolecourtier.fr');

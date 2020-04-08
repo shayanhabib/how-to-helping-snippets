@@ -1,0 +1,11 @@
+method to change status from published to draft of posts at once.. !!
+
+
+$the_query = get_posts( 'post_type=product&fields=ids' );
+if($the_query){
+	foreach($the_query as $id) {
+		//echo $id;
+		$post = array( 'ID' => $id, 'post_status' => 'draft' );
+		wp_update_post($post);
+	}
+}

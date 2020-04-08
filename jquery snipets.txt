@@ -1,0 +1,29 @@
+how to put button for moving up on site.. 
+_______
+
+
+jQuery(document).ready(function(e) {
+
+		jQuery('.go-top').click(function(event) {
+
+			event.preventDefault();
+
+			jQuery('html, body').animate({scrollTop: 0}, 300);
+
+		});
+
+});
+
+
+_______
+
+how to remove anchor and just put text of it on load..
+
+_______
+
+
+jQuery(document).ready(function(e) {
+
+	jQuery("#menu-item-402 a").replaceWith(jQuery("#menu-item-402 a").text());
+
+});

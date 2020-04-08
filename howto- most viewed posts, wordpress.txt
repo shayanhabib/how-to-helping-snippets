@@ -1,0 +1,77 @@
+How to display wordpress posts sorted by post view count [Solved: without a plugin]
+
+
+1.Paste the below code inside the function.php file of the current theme.
+
+
+<?php
+// function to display number of posts.
+function getPostViews($postID){
+    $count_key = 'post_views_count';
+    $count = get_post_meta($postID, $count_key, true);
+    if($count==''){
+        delete_post_meta($postID, $count_key);
+        add_post_meta($postID, $count_key, '0');
+        return '0 View';
+    }
+    return $count.' Views';
+}
+ 
+// function to count views.
+function setPostViews($postID) {
+    $count_key = 'post_views_count';
+    $count = get_post_meta($postID, $count_key, true);
+    if($count==''){
+        $count = 0;
+        delete_post_meta($postID, $count_key);
+        add_post_meta($postID, $count_key, '0');
+    }else{
+        $count++;
+        update_post_meta($postID, $count_key, $count);
+    }
+}
+ 
+// Add it to a column in WP-Admin - (Optional)
+add_filter('manage_posts_columns', 'posts_column_views');
+add_action('manage_posts_custom_column', 'posts_custom_column_views',5,2);
+function posts_column_views($defaults){
+    $defaults['post_views'] = __('Views');
+    return $defaults;
+}
+function posts_custom_column_views($column_name, $id){
+    if($column_name === 'post_views'){
+        echo getPostViews(get_the_ID());
+    }
+}
+?>
+
+
+2. Open single.php which is responsible to display each post in WP and paste this single line of code inside the loop.
+
+
+<?php setPostViews(get_the_ID()); ?>
+
+
+3. Now to display the post view count by using this line in side wordpress loop on any page.
+
+<?php echo getPostViews(get_the_ID()); ?>
+
+
+OR
+
+
+we can display posts sorted by Post view count , by using the below code.
+
+<?php
+$args = array(  'numberposts'  => 4,  /* get 4 posts, or set -1 for all */
+                'orderby'      => 'meta_value',  /* this will look at the meta_key you set below */
+                'meta_key'     => 'post_views_count',
+                'order'        => 'DESC',
+                'post_type'    => 'post',
+                'post_status'  => 'publish'
+            );
+$myposts = get_posts( $args );
+foreach( $myposts as $mypost ) {
+    /* do things here */
+}
+?>

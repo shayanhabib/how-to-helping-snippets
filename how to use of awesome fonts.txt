@@ -1,0 +1,6 @@
+for using awesome font just include this link in header portion : 
+<link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+and after that you just have to use <i></i> tags wherever you wanna put awesome fonts.. 
+
+---
+

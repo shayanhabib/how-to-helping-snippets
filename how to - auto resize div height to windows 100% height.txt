@@ -1,0 +1,13 @@
+how to auto resize div height to windows 100% height
+
+$(document).ready(function() {
+          function setHeight() {
+            windowHeight = $(window).innerHeight();
+            $('.siteheader').css('height', windowHeight);
+          };
+          setHeight();
+          
+          $(window).resize(function() {
+            setHeight();
+          });
+        });

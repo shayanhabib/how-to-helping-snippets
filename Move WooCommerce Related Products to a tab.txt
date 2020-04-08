@@ -1,0 +1,31 @@
+/**
+* Move WooCommerce Related Products to a tab
+*
+* Copy code to theme functions.php
+*/
+ 
+// Remove standard Related Products section
+remove_action( 'woocommerce_after_single_product_summary', 'woocommerce_output_related_products', 20 );
+/**
+* Add Tab
+*
+* Set the priority to position the tab
+* Default is 25, this adds the tab between additional info tab and reviews tab
+*/
+add_filter( 'woocommerce_product_tabs' , 'woocommerce_related_products_tab' );
+function woocommerce_related_products_tab( $tabs ) {
+ 
+$tabs['related_products'] = array(
+'title' => 'Related Products',
+'priority' => 25,
+'callback' => 'woocommerce_product_related_products_tab'
+);
+ 
+return $tabs;
+ 
+}
+ 
+// Related Products callback
+function woocommerce_product_related_products_tab() {
+echo do_shortcode('[related_products]');
+}

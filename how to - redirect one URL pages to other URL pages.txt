@@ -1,0 +1,7 @@
+how to redirect one URL pages to other URL pages.. 
+
+
+RewriteEngine on
+RewriteCond %{HTTP_HOST} ^nejatkundura.com [NC,OR]
+RewriteCond %{HTTP_HOST} ^www.nejatkundura.com [NC]
+RewriteRule ^(.*)$ http://onlymarka.com/$1 [L,R=301,NC]

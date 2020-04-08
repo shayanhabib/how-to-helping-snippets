@@ -1,0 +1,27 @@
+use of paypal link for payment
+____
+
+
+
+I figured out how to do this. In the Button URL area, place the following code for each button you create on PayPal.
+
+https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=YOURBUTTONID
+
+For example, if your button ID is JK24569129K3, the link would read as:
+
+https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=JK24569129K3
+
+
+
+
+
+
+9B5FU2YXVTNB2
+
+
+
+https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_botton_id=9B5FU2YXVTNB2
+
+https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=YOURBUTTONID
+
+https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=9B5FU2YXVTNB2     (correct one!)

@@ -1,0 +1,15 @@
+<style>
+[contenteditable=true]:empty:before {
+	content: attr(placeholder);
+	display: block; /* For Firefox */
+	cursor:text;
+	color:#000;
+}
+div[contenteditable=true] {
+	outline:none !important;
+}
+</style>
+
+<div id="roomname_dv" contenteditable="true" spellcheck="true" role="textbox" aria-multiline="true" placeholder="What's on your mind?" onkeyup="document.getElementById('roomname').value = document.getElementById('roomname_dv').innerHTML;" style="font-size: 18px; margin-bottom: 20px;"></div>
+
+<input type="text" style="width: 100%; padding:20px; font-size: 18px;" value="" name="roomname" id="roomname" /> 

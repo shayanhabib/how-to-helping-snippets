@@ -1,0 +1,6 @@
+//new user registeration notification mail to admin 
+add_action('woocommerce_created_customer', 'admin_email_on_registration');
+function admin_email_on_registration() {
+    $user_id = get_current_user_id();
+    wp_new_user_notification( $user_id );
+}

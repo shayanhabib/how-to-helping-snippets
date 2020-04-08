@@ -1,0 +1,6 @@
+- Woo Commerce extension enhancement for learning purpose
+- api key / CSV (import & export feasibility) integration of stores for syncing products / categories in WordPress
+- Aweber ?
+- Gravity Form 
+- Drupal
+- plugin development
