@@ -1,0 +1,57 @@
+<?php
+global $wpdb;
+
+// 1. Bulk Delete All Orders
+$wpdb->query("DELETE FROM {$wpdb->prefix}woocommerce_order_itemmeta");
+$wpdb->query("DELETE FROM {$wpdb->prefix}woocommerce_order_items");
+$wpdb->query("DELETE FROM {$wpdb->comments} WHERE comment_type = 'order_note'");
+$wpdb->query("
+    DELETE FROM {$wpdb->postmeta} 
+    WHERE post_id IN (SELECT ID FROM {$wpdb->posts} WHERE post_type = 'shop_order')
+");
+$wpdb->query("DELETE FROM {$wpdb->posts} WHERE post_type = 'shop_order'");
+
+
+// 2. Bulk Delete All Products
+$wpdb->query("
+    DELETE FROM {$wpdb->postmeta} 
+    WHERE post_id IN (SELECT ID FROM {$wpdb->posts} WHERE post_type IN ('product', 'product_variation'))
+");
+$wpdb->query("
+    DELETE FROM {$wpdb->posts} 
+    WHERE post_type IN ('product', 'product_variation')
+");
+
+
+// 3. Bulk Delete All Trashed Products
+$wpdb->query("
+    DELETE FROM {$wpdb->postmeta} 
+    WHERE post_id IN (SELECT ID FROM {$wpdb->posts} WHERE post_type = 'product' AND post_status = 'trash')
+");
+$wpdb->query("
+    DELETE FROM {$wpdb->posts} 
+    WHERE post_type = 'product' AND post_status = 'trash'
+");
+
+
+// 4. Bulk Delete All Coupons
+$wpdb->query("
+    DELETE FROM {$wpdb->postmeta} 
+    WHERE post_id IN (SELECT ID FROM {$wpdb->posts} WHERE post_type = 'shop_coupon')
+");
+$wpdb->query("
+    DELETE FROM {$wpdb->posts} 
+    WHERE post_type = 'shop_coupon'
+");
+
+
+// 5. Bulk Delete All Order Notes
+$wpdb->query("
+    DELETE FROM {$wpdb->commentmeta} 
+    WHERE comment_id IN (SELECT comment_ID FROM {$wpdb->comments} WHERE comment_type = 'order_note')
+");
+$wpdb->query("
+    DELETE FROM {$wpdb->comments} 
+    WHERE comment_type = 'order_note'
+");
+?>
