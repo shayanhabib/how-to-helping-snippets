@@ -1,0 +1,71 @@
+<script>
+// Function to convert image to Base64
+function getBase64Image(imgUrl, callback) {
+  var img = new Image();
+  img.crossOrigin = 'Anonymous';
+  img.onload = function () {
+    var canvas = document.createElement('canvas');
+    canvas.width = img.width;
+    canvas.height = img.height;
+    var ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+    var dataURL = canvas.toDataURL('image/jpeg');
+    callback(dataURL);
+  };
+  img.src = imgUrl;
+}
+
+function saveContact(contact) {
+  console.log("Saving contact:", contact.name);  // Debug log
+  getBase64Image(contact.photoUrl, function (base64Image) {
+    var base64Data = base64Image.replace(/^data:image\/(png|jpg|jpeg);base64,/, '');
+
+    var vcard = "BEGIN:VCARD\nVERSION:4.0\nFN:" + contact.name +
+                "\nTEL;TYPE=work,voice:" + contact.phone +
+                "\nEMAIL:" + contact.email +
+                "\nPHOTO;ENCODING=b;TYPE=JPEG:" + base64Data +
+                "\nEND:VCARD";
+
+    var blob = new Blob([vcard], { type: "text/vcard" });
+    var reader = new FileReader();
+
+    reader.onload = function (event) {
+      var dataUrl = event.target.result;
+      var newLink = document.createElement('a');
+      newLink.download = contact.name + ".vcf";
+      newLink.href = dataUrl;
+      newLink.style.display = 'none';
+
+      document.body.appendChild(newLink);
+      newLink.click();
+      document.body.removeChild(newLink);
+    };
+
+    reader.readAsDataURL(blob);
+  });
+}
+
+var contacts = [
+  {
+    buttonId: "save-btn",
+    contact: {
+      name: "John Doe",
+      phone: "+1 213 213 1321",
+      email: "johndoe@test.com",
+      photoUrl: "<Image URL>"
+    }
+  },
+];
+
+contacts.forEach(function(entry) {
+  var saveBtn = document.getElementById(entry.buttonId);
+  if (saveBtn) {
+    console.log("Attaching event listener to button:", entry.buttonId);
+    saveBtn.addEventListener("click", function () {
+      saveContact(entry.contact);
+    });
+  } else {
+    console.log("Button not found:", entry.buttonId);
+  }
+});
+</script>
