@@ -1,0 +1,3 @@
+Open terminal / SSH and then execute below command, it will fix the issue: 
+
+echo -e "proxy_ssl_server_name on;\nproxy_ssl_name \$host;" > /etc/nginx/conf.d/fixssl.conf && service nginx restart
