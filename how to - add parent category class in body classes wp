@@ -1,0 +1,31 @@
+<?php
+function add_parent_category_class($classes) {
+    if (is_product_category() || is_product() || is_shop() || is_product_taxonomy()) {
+        global $post;
+        
+        // Get the product categories
+        if (is_product()) {
+            $terms = get_the_terms($post->ID, 'product_cat');
+        } elseif (is_product_category()) {
+            $current_category = get_queried_object();
+            $terms = get_terms(array('taxonomy' => 'product_cat', 'child_of' => $current_category->term_id));
+        } else {
+            $terms = get_terms('product_cat');
+        }
+
+        if ($terms && !is_wp_error($terms)) {
+            foreach ($terms as $term) {
+                // Get the parent category if it exists
+                $parent_category = get_term($term->parent, 'product_cat');
+                if ($parent_category && !is_wp_error($parent_category)) {
+                    $classes[] = 'parent-cat-' . sanitize_html_class($parent_category->slug);
+                }
+            }
+        }
+    }
+
+    return $classes;
+}
+
+add_filter('body_class', 'add_parent_category_class');
+?>
