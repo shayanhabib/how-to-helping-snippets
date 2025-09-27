@@ -1,0 +1,32 @@
+<?php
+//add featured image url in rest /wp-json/wp/v2/posts?page=15&per_page=50
+function add_featured_image_url_to_rest_api($data, $post, $context) {
+    if (has_post_thumbnail($post->ID)) {
+        $thumbnail_id = get_post_thumbnail_id($post->ID);
+        $image_url = wp_get_attachment_url($thumbnail_id); // Get the actual image URL
+
+        // If Jetpack Photon (Site Accelerator) is active, remove its CDN URLs
+        $image_url = preg_replace('/^https?:\/\/i\d+\.wp\.com\//', 'https://', $image_url);
+
+        $data->data['featured_image_url'] = $image_url;
+    } else {
+        $data->data['featured_image_url'] = null;
+    }
+    return $data;
+}
+
+add_filter('rest_prepare_post', 'add_featured_image_url_to_rest_api', 10, 3);
+
+
+//add category names in rest /wp-json/wp/v2/posts?page=15&per_page=50
+function add_categories_to_rest_api() {
+    register_rest_field('post', 'category_names', [
+        'get_callback' => function($post) {
+            $categories = get_the_category($post['id']);
+            return wp_list_pluck($categories, 'name'); // Returns category names
+        }
+    ]);
+}
+add_action('rest_api_init', 'add_categories_to_rest_api');
+
+?>
