@@ -1,0 +1,19 @@
+<?php
+function add_image_title_from_alt_elementor($content) {
+    // Only modify image tags in the content
+    $content = preg_replace_callback('/<img(.*?)>/', function($matches) {
+        // Check if the image already has a title attribute
+        if (strpos($matches[1], 'title=') === false) {
+            // Extract the alt text from the image
+            preg_match('/alt="([^"]*)"/', $matches[1], $alt_matches);
+            $img_title = isset($alt_matches[1]) ? $alt_matches[1] : 'Default Image Title'; // Fallback title
+            return '<img' . $matches[1] . ' title="' . $img_title . '">';
+        }
+        return $matches[0];
+    }, $content);
+    
+    return $content;
+}
+
+add_filter('elementor/widget/render_content', 'add_image_title_from_alt_elementor');
+?>
