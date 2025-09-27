@@ -1,0 +1,152 @@
+<?php
+require_once('wp-load.php');
+set_time_limit(0);
+// error_reporting(E_ALL);
+// ini_set('display_errors', true);
+
+function fetch_and_import_posts_with_images() {
+    $source_site = "https://example.com"; // External site URL
+    $target_site = get_site_url(); // Target site (where posts will be imported)
+    
+    $page = 1;
+    $total_pages = 15;
+
+    do {
+        $response = wp_remote_get("$source_site/wp-json/wp/v2/posts?page=$page&per_page=50", [
+            'timeout' => 3000000000000, // Set timeout in seconds
+            'headers' => [
+                'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+            ],
+        ]);
+
+
+
+        if (is_wp_error($response)) {
+            die("Error fetching posts: " . $response->get_error_message());
+        }
+
+        $posts = json_decode(wp_remote_retrieve_body($response), true);
+        $total_pages = wp_remote_retrieve_header($response, "X-WP-TotalPages") ?: 1;
+
+        foreach ($posts as $post) {
+            $title = $post['title']['rendered'];
+            $slug = $post['slug'];
+            
+            if (post_exists_by_title_and_slug($title, $slug)) {
+                echo "Skipping duplicate: $title <br>";
+                continue; // Skip this post
+            }
+            
+            $post_date = $post['date'];
+            $post_date_gmt = $post['date_gmt'];
+            $status = $post['status'];
+            $content = $post['content']['rendered'];
+            $image_url = ( isset($post['featured_image_url']) ) ? $post['featured_image_url'] : "";
+            
+            $category_names = ( isset($post['category_names']) ) ? $post['category_names'] : [];
+            $category_ids = get_or_create_category_ids($category_names);
+
+            // Upload image to target site and get attachment ID
+            $image_id = 0;
+            if (!empty($image_url)) {
+                $image_id = download_and_attach_image($image_url, $title);
+            }
+
+            // Insert post into the target site
+            $post_data = [
+                'post_title'   => $title,
+                'post_name'    => $slug,
+                'post_content' => $content,
+                'post_status'  => $status,
+                'post_author'  => 1,
+                'post_type'    => 'post',
+                'post_date'     => $post_date,
+                'post_date_gmt'     => $post_date_gmt,
+                'post_category'=> $category_ids,
+                'meta_input'   => ['external_source' => $source_site],
+            ];
+
+            if ($image_id) {
+                $post_data['meta_input']['_thumbnail_id'] = $image_id;
+            }
+
+            $new_post_id = wp_insert_post($post_data);
+
+            if ($new_post_id) {
+                echo "Imported: $title <br>";
+                if ($image_id) {
+                    set_post_thumbnail($new_post_id, $image_id);
+                }
+            } else {
+                echo "Failed to import: $title <br>";
+            }
+        
+        }
+        // echo 'All done';
+        $page++;
+
+    } while ($page <= $total_pages);
+}
+
+function post_exists_by_title_and_slug($title, $slug) {
+    global $wpdb;
+    $post = $wpdb->get_var($wpdb->prepare(
+        "SELECT ID FROM $wpdb->posts WHERE post_title = %s AND post_name = %s AND post_status != 'trash' LIMIT 1",
+        $title,
+        $slug
+    ));
+    return !empty($post);
+}
+
+function download_and_attach_image($image_url, $title) {
+    $upload_dir = wp_upload_dir();
+    $image_data = file_get_contents($image_url);
+
+    if (!$image_data) return 0;
+
+    $filename = basename($image_url);
+    $filepath = $upload_dir['path'] . '/' . $filename;
+
+    file_put_contents($filepath, $image_data);
+
+    $filetype = wp_check_filetype($filename, null);
+    $attachment = [
+        'post_mime_type' => $filetype['type'],
+        'post_title'     => sanitize_file_name($title),
+        'post_content'   => '',
+        'post_status'    => 'inherit',
+    ];
+
+    $attach_id = wp_insert_attachment($attachment, $filepath);
+    require_once(ABSPATH . 'wp-admin/includes/image.php');
+    $attach_data = wp_generate_attachment_metadata($attach_id, $filepath);
+    wp_update_attachment_metadata($attach_id, $attach_data);
+
+    return $attach_id;
+}
+
+function get_or_create_category_ids($category_names) {
+    $category_ids = [];
+
+    foreach ($category_names as $category_name) {
+        // Check if the category already exists
+        $existing_category = get_term_by('name', $category_name, 'category');
+
+        if ($existing_category) {
+            // Category exists, get the ID
+            $category_ids[] = $existing_category->term_id;
+        } else {
+            // Category doesn't exist, create it
+            $new_category = wp_insert_term($category_name, 'category');
+
+            if (!is_wp_error($new_category)) {
+                $category_ids[] = $new_category['term_id'];
+            }
+        }
+    }
+
+    return $category_ids;
+}
+
+fetch_and_import_posts_with_images();
+?>
