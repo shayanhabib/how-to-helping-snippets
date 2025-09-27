@@ -1,0 +1,26 @@
+<?php
+add_action('init', function () {
+    if (!is_admin()) return;
+
+    // Example: Import entries from a local CSV (filtered before based on date)
+    $csv = fopen(__DIR__ . '/filtered_entries.csv', 'r');
+    $header = fgetcsv($csv);
+
+    while (($row = fgetcsv($csv)) !== false) {
+        $entry = [];
+        foreach ($header as $index => $field_label) {
+            $entry[$field_label] = $row[$index]; // You may need to map to field IDs
+        }
+
+        $entry['form_id'] = 1; // Replace with your form ID
+        $result = GFAPI::add_entry($entry);
+
+        if (is_wp_error($result)) {
+            error_log("Error importing entry: " . $result->get_error_message());
+        } else {
+            error_log("Imported entry ID: $result");
+        }
+    }
+
+    fclose($csv);
+});
