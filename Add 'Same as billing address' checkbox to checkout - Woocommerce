@@ -1,0 +1,35 @@
+<?php
+//same as billing option.. 
+add_action('woocommerce_before_checkout_shipping_form', function () {
+    ?>
+    <p class="form-row">
+        <label>
+            <input type="checkbox" id="same_as_billing" />
+            Same as billing address
+        </label>
+    </p>
+    <?php
+});
+
+add_action('wp_footer', function () {
+    if (!is_checkout()) return;
+    ?>
+    <script>
+    jQuery(function ($) {
+        function copyBillingToShipping() {
+            $('#billing_first_name, #billing_last_name, #billing_address_1, #billing_city, #billing_postcode, #billing_country, #billing_state')
+            .each(function () {
+                const target = this.id.replace('billing_', 'shipping_');
+                $('#' + target).val($(this).val());
+            });
+        }
+
+        $('#same_as_billing').on('change', function () {
+            if (this.checked) {
+                copyBillingToShipping();
+            }
+        }).trigger('change');
+    });
+    </script>
+    <?php
+});
